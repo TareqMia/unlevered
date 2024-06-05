@@ -1,40 +1,38 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
-import ReactApexChart from "react-apexcharts";
 import { formatStockData } from "@/lib/utils";
+import ReactApexChart from "react-apexcharts";
 
 import { ApexOptions } from "apexcharts";
-
-// import dynamic from "next/dynamic";
-// const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
-
-import dynamic from "next/dynamic";
-const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
-
-interface StockData {
-	[key: string]: {
-		"1. open": string;
-		"2. high": string;
-		"3. low": string;
-		"4. close": string;
-		"5. volume": string;
-	};
-}
+import { useTheme } from "next-themes";
+import { ToggleGroup, ToggleGroupItem } from "@radix-ui/react-toggle-group";
 
 const StockChart = () => {
-	const [stockData, setStockData] = useState<any>(null);
+	const { resolvedTheme } = useTheme();
 	const [seriesData, setSeriesData] = useState<any>(null);
-
-	const candleStickOptions: ApexOptions = {
+	const [candleStickOptions, setCandleStickOptions] = useState<ApexOptions>({
 		chart: {
 			type: "candlestick",
-		},
-		title: {
-			text: "CandleStick Chart",
-			align: "left",
+			width: "100%",
+			zoom: {
+				enabled: true,
+				type: "x",
+				autoScaleYaxis: false,
+				zoomedArea: {
+					fill: {
+						color: "#90CAF9",
+						opacity: 0.4,
+					},
+					stroke: {
+						color: "#0D47A1",
+						opacity: 0.4,
+						width: 1,
+					},
+				},
+			},
 		},
 		xaxis: {
 			type: "datetime",
@@ -44,18 +42,21 @@ const StockChart = () => {
 				enabled: true,
 			},
 		},
-	};
+		theme: {
+			mode: resolvedTheme === "dark" ? "dark" : "light",
+		},
+	});
 
 	useEffect(() => {
 		const fetchData = async () => {
-			const interval = "60min"; // or any other interval you have data for
+			const interval = "5min";
 
 			try {
 				const response = await axios.get(`/api/stocks`, {
 					params: { interval },
 				});
 
-				const seriesData = formatStockData(response.data);
+				const seriesData = formatStockData(response.data, interval);
 				setSeriesData(seriesData);
 			} catch (error) {
 				console.error("Error fetching stock data", error);
@@ -65,62 +66,29 @@ const StockChart = () => {
 		fetchData();
 	}, []);
 
-	const option = {
-		chart: {
-			type: "candlestick",
-		},
-		title: {
-			text: "CandleStick Chart",
-			align: "left",
-		},
-		xaxis: {
-			type: "datetime",
-		},
-		yaxis: {
-			tooltip: {
-				enabled: true,
+	useEffect(() => {
+		setCandleStickOptions((prevOptions) => ({
+			...prevOptions,
+			theme: {
+				mode: resolvedTheme === "dark" ? "dark" : "light",
 			},
-		},
-	};
-
-	// const option = {
-	// 	chart: {
-	// 		id: "apexchart-example",
-	// 	},
-	// 	xaxis: {
-	// 		categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999],
-	// 	},
-	// };
-
-	// const series = [
-	// 	{
-	// 		name: "series-1",
-	// 		data: [30, 40, 35, 50, 49, 60, 70, 91, 125],
-	// 	},
-	// ];
+		}));
+	}, [resolvedTheme]);
 
 	return (
-		<ReactApexChart
-			series={[
-				{
-					data: seriesData,
-				},
-			]}
-			options={candleStickOptions}
-			type="candlestick"
-			height={500}
-			width={800}
-		/>
-
-		// <>
-		// 	<Chart
-		// 		type="candlestick"
-		// 		options={option}
-		// 		series={seriesData}
-		// 		height={200}
-		// 		width={500}
-		// 	/>
-		// </>
+		<div className="w-full h-96 max-w-screen-lg mx-auto p-4 border border-gray-200 rounded-lg shadow-md">
+			<ReactApexChart
+				series={[
+					{
+						data: seriesData,
+					},
+				]}
+				options={candleStickOptions}
+				type="candlestick"
+				height={"100%"}
+				width={"100%"}
+			/>
+		</div>
 	);
 };
 

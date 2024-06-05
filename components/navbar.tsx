@@ -20,10 +20,10 @@ const Navbar = () => {
 			<div className="hidden md:flex gap-4 items-center">
 				<ModeToggle />
 				<NavItem href="/" label="Home" />
-				<NavItem href="/about" label="About" />
-				<NavItem href="/services" label="Services" />
-				<NavItem href="/portfolio" label="Portfolio" />
-				<NavItem href="/contact" label="Contact" />
+				<NavItem href="/" label="About" />
+				<NavItem href="/" label="Services" />
+				<NavItem href="/" label="Portfolio" />
+				<NavItem href="/" label="Contact" />
 			</div>
 			<Sheet>
 				<SheetTrigger asChild>

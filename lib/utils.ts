@@ -5,11 +5,13 @@ export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
 }
 
-export const formatStockData = (stockData: any) => {
+export const formatStockData = (stockData: any, interval: string) => {
 	const formattedData: any[] = [];
 
-	if (stockData["Time Series (60min)"]) {
-		Object.entries(stockData["Time Series (60min)"]).map(
+	console.log(interval);
+
+	if (stockData[`Time Series (${interval})`]) {
+		Object.entries(stockData[`Time Series (${interval})`]).map(
 			([key, value]: [any, any]) => {
 				formattedData.push({
 					x: key,

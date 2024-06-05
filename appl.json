@@ -1,8 +1,17 @@
 {
 	"analyst_estimates": {
-		"Citibank": 6.5,
-		"Goldman Sachs": 7.9,
-		"Morgan Stanley": 9.87
+		"Citibank": {
+			"estimate": 6.5,
+			"icon": "/citi.svg"
+		},
+		"Goldman Sachs": {
+			"estimate": 7.9,
+			"icon": "/goldman.svg"
+		},
+		"Morgan Stanley": {
+			"estimate": 9.87,
+			"icon": "/morganstanley.svg"
+		}
 	},
 	"current_ratio": 7.1,
 	"debt_to_equity_ratio": 2.1,
