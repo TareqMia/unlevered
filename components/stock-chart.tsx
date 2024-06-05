@@ -4,10 +4,14 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 import { formatStockData } from "@/lib/utils";
-import ReactApexChart from "react-apexcharts";
 
 import { ApexOptions } from "apexcharts";
 import { useTheme } from "next-themes";
+import dynamic from "next/dynamic";
+
+const ReactApexChart = dynamic(() => import("react-apexcharts"), {
+	ssr: false,
+});
 
 const StockChart = () => {
 	const { resolvedTheme } = useTheme();
