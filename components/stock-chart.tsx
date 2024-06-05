@@ -8,7 +8,6 @@ import ReactApexChart from "react-apexcharts";
 
 import { ApexOptions } from "apexcharts";
 import { useTheme } from "next-themes";
-import { ToggleGroup, ToggleGroupItem } from "@radix-ui/react-toggle-group";
 
 const StockChart = () => {
 	const { resolvedTheme } = useTheme();
@@ -50,9 +49,10 @@ const StockChart = () => {
 	useEffect(() => {
 		const fetchData = async () => {
 			const interval = "5min";
+			const ticker = "APPL";
 
 			try {
-				const response = await axios.get(`/api/stocks`, {
+				const response = await axios.get(`/api/stocks/${ticker}`, {
 					params: { interval },
 				});
 
